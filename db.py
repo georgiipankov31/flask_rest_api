@@ -103,13 +103,13 @@ class FDataBase:
         "Получить перечень статей"
         try:
             if secret_level == 'public':
-                self.__cur.execute("""SELECT * FROM rest_app.articles WHERE privacy = 'public';""")
+                self.__cur.execute("""SELECT * FROM rest_app.articles WHERE privacy = 'public' ORDER BY id DESC;""")
                 res = self.__cur.fetchall()
             elif secret_level == 'need_login':
-                self.__cur.execute("""SELECT * FROM rest_app.articles WHERE (privacy = 'public' or privacy = 'need_login');""")
+                self.__cur.execute("""SELECT * FROM rest_app.articles WHERE (privacy = 'public' or privacy = 'need_login') ORDER BY id DESC;""")
                 res = self.__cur.fetchall()
             else:
-                self.__cur.execute("""SELECT * FROM rest_app.articles;""")
+                self.__cur.execute("""SELECT * FROM rest_app.articles ORDER BY id DESC;""")
                 res = self.__cur.fetchall()
             list_article = []
             for article in res:
