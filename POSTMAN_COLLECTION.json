@@ -12,12 +12,24 @@
 			"item": [
 				{
 					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"variable_key\", \"variable_value\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\" : \"gosha\",\n    \"password\" : \"gosha\"\n    // \"role\" : \"admin\"\n}",
+							"raw": "{\n    // \"role\" : \"admin\",\n    \"username\" : \"user\",\n    \"password\" : \"user\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,7 +37,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1235/api/v1/register",
+							"raw": "http://localhost:1235/api/v1/oauth/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -34,6 +46,7 @@
 							"path": [
 								"api",
 								"v1",
+								"oauth",
 								"register"
 							]
 						}
@@ -92,7 +105,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczOTM3NTI5NSwianRpIjoiMzk1ZTI3YjgtMjkzMC00ZjVkLTkwMjAtMzUwYWU3MDJmOGMxIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiJnb3NoYSIsIm5iZiI6MTczOTM3NTI5NSwiY3NyZiI6ImZkODM5MzE3LTk1OTktNDg1OS1hYjA1LWMxOWQxNDYyMjhlYyIsImV4cCI6MTczOTM3NTg5NSwicm9sZSI6InVzZXIifQ.-J5Rv7qVdzCvL5vlegAoz3IqQReS1RyqXceuUPm9KWY",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczOTM4Njk2OCwianRpIjoiNDY5YTNjYTMtZTYyYy00NjZhLWFkODQtZDdlOTMwYThmZjMxIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiJhZG1pbiIsIm5iZiI6MTczOTM4Njk2OCwiY3NyZiI6IjJkYzZjOWQwLTg2YzktNDEwYS1iNDkzLWZiNjU3OGYyZjkwMyIsImV4cCI6MTczOTM4NzU2OCwicm9sZSI6ImFkbWluIn0.Nplq9aYikUQXZppAV4stpXBy7kzOnTNnNcKnHyvMG3o",
 									"type": "string"
 								}
 							]
@@ -114,7 +127,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:1235/api/v1/refresh",
+							"raw": "http://127.0.0.1:1235/api/v1/oauth/refresh",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -126,6 +139,7 @@
 							"path": [
 								"api",
 								"v1",
+								"oauth",
 								"refresh"
 							]
 						}
