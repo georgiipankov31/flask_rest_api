@@ -2,6 +2,7 @@ import os
 import logging
 import datetime
 import psycopg2
+from psycopg2 import  pool
 from flask import Flask, jsonify, request, g
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, get_jwt,
@@ -14,6 +15,10 @@ from db import FDataBase
 app = Flask(__name__)
 app.config.from_object(Config)
 dbase = None
+connection_pool = psycopg2.pool.SimpleConnectionPool(1, 5, Config.DATABASE_URI)
+con = connection_pool.getconn()
+dbase = FDataBase(con)
+con.autocommit = True
 jwt = JWTManager(app)
 base_url = "/api/v1"
 if not os.path.exists("logs"):
@@ -30,17 +35,25 @@ logging.basicConfig(
 
 @app.teardown_appcontext
 def close_db(error):
-    if hasattr(g, "link_db"):
-        g.link_db.close()
+    connection_pool.putconn(con)
 
 @app.before_request
-def before_request():
-    global dbase
-    if not hasattr(g, "link_db"):
-        con = psycopg2.connect(Config.DATABASE_URI)
-        con.autocommit = True
-        g.link_db = con
-    dbase = FDataBase(g.link_db)
+def con_refresh():
+    global con, dbase
+    con = connection_pool.getconn()
+    con.autocommit = True
+    dbase = FDataBase(con)
+
+# @app.before_request
+# def before_request():
+#     global dbase
+#     if not hasattr(g, "link_db"):
+#         con = psycopg2.connect(Config.DATABASE_URI)
+#         con.autocommit = True
+#         g.link_db = con
+#     dbase = FDataBase(g.link_db)
+
+
 
 @app.route(base_url+"/oauth/register", methods=["POST"])
 def register():
@@ -151,8 +164,10 @@ def post_article():
     if not(article):
         return jsonify({"message": "error during post", "id_err": err["logger_message_id"]}), 500
     return jsonify({"posted": article}), 200
-    
 
 
 if __name__ == "__main__":
-    app.run(port=1235, debug=True)
+    try:
+        app.run(port=1235, debug=True)
+    finally:
+        connection_pool.closeall()

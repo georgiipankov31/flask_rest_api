@@ -86,6 +86,7 @@ class FDataBase:
         try:
             self.__cur.execute("""INSERT INTO rest_app.articles (title, value, privacy, insered_by) VALUES (%s, %s, %s, %s) RETURNING *;""", (title, value, privacy, author_id))
             res = self.__cur.fetchone()
+            # self.__con.commit()()
             json_add = {
             "id": res["id"],
             "title": res["title"],
